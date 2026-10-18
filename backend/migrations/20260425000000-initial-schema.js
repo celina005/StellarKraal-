@@ -23,6 +23,18 @@ exports.up = function(db) {
     });
   }).then(function(data) {
     return db.runSql(data);
+  }).then(function() {
+    return db.runSql(
+      'CREATE TABLE IF NOT EXISTS appraisal_config (' +
+      '  id SERIAL PRIMARY KEY,' +
+      '  animal_type VARCHAR(64) NOT NULL UNIQUE,' +
+      '  base_value NUMERIC(14, 2) NOT NULL,' +
+      '  depreciation_rate NUMERIC(6, 4) NOT NULL DEFAULT 0,' +
+      '  ltv_ratio NUMERIC(6, 4) NOT NULL DEFAULT 0,' +
+      '  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),' +
+      '  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()' +
+      ');'
+    );
   });
 };
 
@@ -35,6 +47,8 @@ exports.down = function(db) {
     });
   }).then(function(data) {
     return db.runSql(data);
+  }).then(function() {
+    return db.runSql('DROP TABLE IF EXISTS appraisal_config;');
   });
 };
 
